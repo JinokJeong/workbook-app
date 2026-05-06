@@ -7,8 +7,15 @@ import {
   Text,
   View,
 } from 'react-native';
+import BrowserScreen from './screens/BrowserScreen';
 import SearchScreen from './screens/SearchScreen';
 import WordListScreen from './screens/WordListScreen';
+
+const TABS = [
+  { key: 'search',  label: '검색'   },
+  { key: 'browser', label: '브라우저' },
+  { key: 'list',    label: '단어장'  },
+];
 
 export default function App() {
   const [tab, setTab] = useState('search');
@@ -24,16 +31,20 @@ export default function App() {
       <StatusBar barStyle="dark-content" backgroundColor="#F8F9FF" />
 
       <View style={styles.screen}>
-        {tab === 'search' ? (
-          <SearchScreen />
-        ) : (
-          <WordListScreen refreshSignal={refreshSignal} />
-        )}
+        {tab === 'search'  && <SearchScreen />}
+        {tab === 'browser' && <BrowserScreen />}
+        {tab === 'list'    && <WordListScreen refreshSignal={refreshSignal} />}
       </View>
 
       <View style={styles.tabBar}>
-        <TabItem label="검색" active={tab === 'search'} onPress={() => switchTab('search')} />
-        <TabItem label="단어장" active={tab === 'list'} onPress={() => switchTab('list')} />
+        {TABS.map(({ key, label }) => (
+          <TabItem
+            key={key}
+            label={label}
+            active={tab === key}
+            onPress={() => switchTab(key)}
+          />
+        ))}
       </View>
     </View>
   );
@@ -81,7 +92,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#4F6EF7',
   },
   tabLabel: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
     color: '#AAB0C6',
   },
